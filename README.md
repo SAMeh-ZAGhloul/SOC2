@@ -242,6 +242,141 @@ detection:
     - slack
 ```
 
+## Integration Analysis: Wazuh with OpenObserve
+
+A technical analysis shows that integrating Wazuh with OpenObserve is feasible through multiple approaches. Here's a detailed integration plan:
+
+### Integration Methods
+
+1. **Direct Log Ingestion**
+   - Configure Wazuh to forward logs directly to OpenObserve
+   - Use O2's HTTP ingestion API for log shipping
+   - Implement custom output module in Wazuh integrations
+
+2. **Shared Object Storage**
+   - Configure Wazuh to write to object storage (MinIO/S3)
+   - Set up O2 to read from the same storage location
+   - Maintain consistent data format (JSON/ECS)
+
+3. **Pipeline Integration**
+   - Use O2's pipeline system to process Wazuh alerts
+   - Transform data using VRL in O2 pipelines
+   - Create custom alert handling nodes
+
+### Technical Components
+
+1. **Log Collection**
+```yaml
+# Wazuh ossec.conf output configuration
+<ossec_config>
+  <integration>
+    <name>custom-o2</name>
+    <hook_url>http://openobserve:5080/api/default/default/_json</hook_url>
+    <api_key>your-api-key</api_key>
+    <alert_format>json</alert_format>
+  </integration>
+</ossec_config>
+```
+
+2. **OpenObserve Pipeline**
+```rust
+// Pipeline configuration for Wazuh data
+pub struct WazuhPipelineConfig {
+    input: WazuhInput,
+    transforms: Vec<Transform>,
+    output: AlertOutput
+}
+
+pub struct WazuhInput {
+    format: String,  // "json"
+    source: String,  // "wazuh"
+    fields: HashMap<String, String>
+}
+```
+
+3. **Integration Script**
+```python
+#!/usr/bin/env python3
+import json
+import sys
+import requests
+
+def send_event_to_o2(event):
+    url = "http://openobserve:5080/api/default/default/_json"
+    headers = {
+        "Authorization": "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json"
+    }
+    response = requests.post(url, headers=headers, json=event)
+    return response.status_code == 200
+
+# Read from stdin (Wazuh integration input)
+event = sys.stdin.read()
+if event:
+    json_event = json.loads(event)
+    send_event_to_o2(json_event)
+```
+
+### Implementation Steps
+
+1. **Setup Phase**
+   - Install and configure Wazuh server
+   - Deploy OpenObserve cluster
+   - Configure shared authentication
+   - Set up network connectivity
+
+2. **Integration Phase**
+   - Deploy integration script
+   - Configure Wazuh outputs
+   - Set up O2 ingestion pipeline
+   - Create data transforms
+
+3. **Validation Phase**
+   - Test end-to-end data flow
+   - Verify alert correlation
+   - Validate data integrity
+   - Check performance impact
+
+### Technical Considerations
+
+1. **Performance**
+   - Buffer large event volumes
+   - Implement batch processing
+   - Monitor network latency
+   - Optimize storage I/O
+
+2. **Reliability**
+   - Handle connection failures
+   - Implement retry logic
+   - Monitor queue depths
+   - Ensure data persistence
+
+3. **Security**
+   - Secure API endpoints
+   - Encrypt data in transit
+   - Implement access controls
+   - Validate data integrity
+
+### Use Cases
+
+1. **Security Monitoring**
+   - Centralize security alerts
+   - Correlate with other data
+   - Create unified dashboards
+   - Enable advanced analytics
+
+2. **Compliance**
+   - Aggregate compliance data
+   - Generate audit trails
+   - Create compliance reports
+   - Track security posture
+
+3. **Operations**
+   - Monitor agent health
+   - Track system metrics
+   - Analyze performance
+   - Manage deployments
+
 ## Recommendations for On-Premises Deployment
 
 If looking for a fully on-premises solution:
