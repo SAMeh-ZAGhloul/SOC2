@@ -246,6 +246,90 @@ detection:
 
 A technical analysis shows that integrating Wazuh with OpenObserve is feasible through multiple approaches. Here's a detailed integration plan:
 
+### Architecture Diagram
+
+Below is a detailed architecture diagram showing how Wazuh integrates with OpenObserve:
+
+```mermaid
+architecture-beta
+    group wazuh_cluster(server)[Wazuh Cluster]
+        service manager(server)[Wazuh Manager] in wazuh_cluster
+        service agent1(server)[Agent 1] in wazuh_cluster
+        service agent2(server)[Agent 2] in wazuh_cluster
+        service integrations(server)[Custom Integration] in wazuh_cluster
+
+    group o2_cluster(cloud)[OpenObserve Cluster]
+        service o2_api(server)[O2 API] in o2_cluster
+        service o2_ingester(server)[O2 Ingester] in o2_cluster
+        service o2_storage(database)[O2 Storage] in o2_cluster
+        service o2_ui(server)[O2 UI] in o2_cluster
+
+    group storage_layer(cloud)[Storage Layer]
+        service minio(disk)[MinIO/S3] in storage_layer
+
+    agent1:R --> L:manager
+    agent2:R --> L:manager
+    manager:R --> L:integrations
+    integrations:R --> L:o2_api
+    integrations:B --> T:minio
+    o2_ingester:B --> T:minio
+    o2_ingester:R --> L:o2_storage
+    o2_api:R --> L:o2_storage
+    o2_ui:B --> T:o2_api
+```
+
+### Architecture Components
+
+1. **Wazuh Cluster**
+   - **Wazuh Manager**: Central component that collects and analyzes data from agents
+   - **Wazuh Agents**: Endpoint components collecting security data
+   - **Custom Integration**: Python-based integration module for O2 communication
+
+2. **OpenObserve Cluster**
+   - **O2 API**: Handles data ingestion and query requests
+   - **O2 Ingester**: Processes and transforms incoming data
+   - **O2 Storage**: Manages data storage and retrieval
+   - **O2 UI**: Web interface for visualization and management
+
+3. **Storage Layer**
+   - **MinIO/S3**: Optional shared storage for high-volume data transfer
+
+### Data Flow
+
+1. **Direct Integration Path**
+   ```
+   Wazuh Agents → Wazuh Manager → Custom Integration → O2 API → O2 Storage
+   ```
+
+2. **Storage-Based Path**
+   ```
+   Wazuh Agents → Wazuh Manager → Custom Integration → MinIO/S3 → O2 Ingester → O2 Storage
+   ```
+
+### Communication Protocols
+
+1. **Internal Communication**
+   - Wazuh Agent → Manager: Encrypted TCP/UDP
+   - Manager → Integration: Local pipe/socket
+   - O2 Components: gRPC/HTTP
+
+2. **External Communication**
+   - Integration → O2: HTTPS REST API
+   - UI Access: HTTPS Web Interface
+   - Storage Access: S3 Protocol
+
+### High Availability Setup
+
+1. **Wazuh Cluster**
+   - Multiple manager nodes in master/worker configuration
+   - Agent load balancing and failover
+   - Shared configuration database
+
+2. **OpenObserve Cluster**
+   - Multiple API and ingester nodes
+   - Distributed storage with replication
+   - Load balancer for request distribution
+
 ### Integration Methods
 
 1. **Direct Log Ingestion**
