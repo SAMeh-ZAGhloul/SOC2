@@ -164,6 +164,84 @@ A detailed analysis shows that integrating Matano's Detection-as-Code capabiliti
    - Multiple alert destinations
    - Advanced alert management
 
+### Implementation Examples
+
+#### Pipeline Enhancement
+```rust
+// Add new Detection node type
+pub enum NodeType {
+    Stream,
+    Function,
+    Detection,  // New node type
+    Output
+}
+
+// Add detection configuration
+pub struct DetectionConfig {
+    name: String,
+    severity: String,
+    threshold: i32,
+    deduplication_window: i64,
+    python_code: String,
+    destinations: Vec<String>
+}
+```
+
+#### Python Runtime Integration
+```rust
+// Add Python execution environment
+pub struct PythonDetectionRuntime {
+    interpreter: PyObject,
+    cache: RemoteCache,
+}
+
+impl PythonDetectionRuntime {
+    pub fn execute_detection(&self, record: Value) -> Result<Option<Alert>> {
+        // Execute Python detection code
+        // Handle alert generation
+    }
+}
+```
+
+#### Alert Management
+```rust
+// Add alert handling
+pub struct Alert {
+    id: String,
+    rule_name: String, 
+    severity: String,
+    dedupe_key: String,
+    first_seen: i64,
+    last_seen: i64,
+    match_count: i32,
+    context: Value
+}
+
+pub struct AlertManager {
+    pub fn process_detection_match(&self, detection: &Detection, record: &Value) -> Result<()> {
+        // Handle deduplication
+        // Manage thresholds
+        // Store alerts
+    }
+}
+```
+
+#### Detection Configuration Example
+```yaml
+# Example detection configuration in O2
+detection:
+  name: brute_force_login
+  severity: medium
+  threshold: 5 
+  deduplication_window: 15m
+  code: |
+    def detect(record):
+      return "authentication" in record.get("event.category", []) 
+             and record.get("event.outcome") == "failure"
+  destinations:
+    - slack
+```
+
 ## Recommendations for On-Premises Deployment
 
 If looking for a fully on-premises solution:
