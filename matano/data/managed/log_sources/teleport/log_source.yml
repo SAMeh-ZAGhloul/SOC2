@@ -1,0 +1,10 @@
+name: teleport
+
+ingest:
+  # TODO: revisit if adding another table.
+  select_table_from_payload_metadata: |
+    "audit"
+
+meta:
+  display_name: "Teleport"
+  description: "Collect audit events and session logs from Teleport."

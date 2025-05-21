@@ -1,0 +1,30 @@
+name: insights
+
+ingest:
+  expand_records_from_payload: parse_json!(.__raw).Records
+
+transform: |
+  del(.aws.cloudtrail.insight_details)
+
+schema:
+  fields:
+    - name: aws
+      type:
+        type: struct
+        fields:
+          - name: cloudtrail
+            type:
+              type: struct
+              fields:
+                - name: flattened
+                  type:
+                    type: struct
+                    fields:
+                      - name: insight_details
+                        type: string
+                - name: insight_details
+                  type: string
+
+meta:
+  display_name: "CloudTrail Insights Events"
+  description: "Insights events monitor unusual activity from management events"

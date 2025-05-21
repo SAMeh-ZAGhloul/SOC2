@@ -1,0 +1,9 @@
+{
+  "name": "@matano/lambdas",
+  "workspaces": [
+    "./*"
+  ],
+  "devDependencies": {
+    "@types/node": "^18.7.2"
+  }
+}

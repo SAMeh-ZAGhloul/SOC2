@@ -1,0 +1,6 @@
+name: okta
+
+managed:
+  type: OKTA
+  properties:
+    base_url: trial-9179588-admin.okta.com

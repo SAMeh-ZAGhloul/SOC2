@@ -1,0 +1,12 @@
+tasks:
+  - name: base
+    command: |
+      make -j build-assets local-install
+
+image:
+  file: .gitpod.Dockerfile
+
+jetbrains:
+  intellij:
+    prebuilds:
+      version: stable

@@ -1,0 +1,5 @@
+name: default
+
+transform: |
+  # add any additional table-level transformations here e.g.
+  # .my_field = "my_value"

@@ -1,0 +1,12 @@
+[workspace]
+members = [
+  "transformer",
+  "lake_writer",
+  "data_batcher",
+  "shared",
+  "log_puller",
+  "alert_writer",
+  "alert_forwarder",
+  "detection_lib",
+]
+default-members = ["transformer"]

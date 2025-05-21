@@ -1,0 +1,71 @@
+{
+  "responses": [
+    {
+      "url": "http://login.microsoftonline.com/tenant_id/oauth2/v2.0/token",
+      "method": "POST",
+      "responseCode": 200,
+      "responseBody": {
+        "expires_in": 3600,
+        "access_token": "REDACTED_TOKEN"
+      }
+    },
+
+    {
+      "url": "http://login.microsoftonline.com/*/oauth2/v2.0/token",
+      "method": "POST",
+      "responseCode": 400,
+      "responseBody": {
+        "expires_in": 0,
+        "access_token": ""
+      }
+    },
+    {
+      "url": "http://graph.microsoft.com/v1.0/security/alerts_v2?$top=*&$filter=createdDateTime+ge+*+and+createdDateTime+lt+*",
+      "method": "GET",
+      "responseCode": 200,
+      "responseBody": {
+        "value": [
+          "microsoft.graph.security.alert"
+        ]
+      }
+    },
+    {
+      "url": "http://graph.microsoft.com/v1.0/security/incidents?$top=*&$filter=createdDateTime+ge+*+and+createdDateTime+lt+*",
+      "method": "GET",
+      "responseCode": 200,
+      "responseBody": {
+        "value": [
+          "microsoft.graph.security.incident"
+        ]
+      }
+    },
+    {
+      "url": "http://graph.microsoft.com/v1.0/resource_name/resource_relationship?$top=*&$filter=createdDateTime+ge+*+and+createdDateTime+lt+*",
+      "method": "GET",
+      "responseCode": 200,
+      "responseBody": {
+        "value": [
+          "Example"
+        ]
+      }
+    },
+    {
+      "url": "http://*/*/*/*$top=*&$filter=createdDateTime+ge+*+and+createdDateTime+lt+*",
+      "method": "GET",
+      "responseCode": 403,
+      "responseBody": {
+        "value": [
+          {
+            "error":
+            {
+              "code":"Unauthorized",
+              "message":"Unauthorized request.",
+              "innerError":{"date":"2023-08-09T15:54:29","request-id":"7fd4af1f-8a50-43a9-ae82-92d92f6706d3",
+              "client-request-id":"7fd4af1f-8a50-43a9-ae82-92d92f6706d3"}
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "name": "matano",
+  "version": "0.0.1",
+  "description": "Matano - the open source security lake platform for AWS.",
+  "author": "🐻‍❄️ Samrose Ahmed 🐻‍❄️",
+  "bin": {
+    "matano": "./bin/run"
+  },
+  "homepage": "https://matano.dev",
+  "repository": {
+    "directory": "cli",
+    "url": "https://github.com/matanolabs/matano"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "dependencies": {
+    "@aws-cdk/cx-api": "*",
+    "@oclif/core": "^1.9.5",
+    "@oclif/plugin-autocomplete": "*",
+    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-plugins": "^2.0.1",
+    "ansi-styles": "^5",
+    "aws-cdk": "2.85.0",
+    "aws-sdk": "^2.1311",
+    "chalk": "^4",
+    "enquirer": "^2.3",
+    "execa": "^5",
+    "fs-extra": "^10.1.0",
+    "ora": "^4",
+    "promptly": "^3.2.0",
+    "proxy-agent": "^5.0.0",
+    "phin": "3.7.0",
+    "tty-table": "^4.1.6",
+    "yaml": "1.10.2"
+  },
+  "devDependencies": {
+    "@oclif/test": "^2",
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^16.9.4",
+    "@types/yaml": "^1.9.7",
+    "globby": "^11",
+    "mocha": "^9",
+    "oclif": "^3",
+    "shx": "^0.3.3",
+    "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.7"
+  },
+  "pkg": {
+    "scripts": [
+      "./dist/**/*.js",
+      "./bin/**/*.js"
+    ],
+    "assets": [
+      "node_modules/vm2/**/*"
+    ],
+    "targets": [
+      "node14.18.1-linux-x64",
+      "node14.18.1-macos-x64"
+    ],
+    "outputPath": "build"
+  },
+  "oclif": {
+    "bin": "matano",
+    "dirname": "matano",
+    "helpClass": "./dist/help",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-autocomplete"
+    ],
+    "repositoryPrefix": "<%- repo %>/blob/main/cli/<%- commandPath.replace(\"dist\", \"src\") %>",
+    "topicSeparator": ":",
+    "topics": {
+      "generate": {
+        "description": "Utilities to get started and generate boilerplate."
+      }
+    },
+    "hooks": {
+      "prerun": "./dist/hooks/metadata-reporting",
+      "init": "./dist/hooks/metadata-reporting-info"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist && rm -rf node_modules",
+    "full-install": "npm uninstall -g matano && npm install -g . --prefix ${NPM_GLOBAL_INSTALL_PREFIX:-$(npm config get prefix)}",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "eslint . --ext .ts --config .eslintrc",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "npm run lint",
+    "prepack": "npm run build && oclif manifest && oclif readme",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif readme && git add README.md"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "bugs": "https://github.com/matanolabs/matano/issues",
+  "keywords": [
+    "oclif"
+  ],
+  "types": "dist/index.d.ts",
+  "prettier": {
+    "printWidth": 120
+  }
+}

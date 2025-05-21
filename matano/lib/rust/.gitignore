@@ -1,0 +1,11 @@
+target
+.cache
+.cargo
+cargo-zigbuild
+zig
+garbage
+log_sources_configuration.*
+**/*/test.json
+transformer/src/enrichment
+transformer/config
+.idea

@@ -1,0 +1,37 @@
+id: b011cb5b-10f3-404b-9b1e-e1750056a172
+created: 2022/10/23
+name: zeek_events
+display_name: Zeek events being used
+description: Detects on all zeek events
+
+enabled: true
+
+runbook: Check the zeek event
+references:
+  - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html
+false_positives:
+  - >
+    Legitimate AWS root account usage by a trusted user.
+    See https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html
+    for AWS tasks that require AWS account root user credentials.
+
+reports:
+  attack:
+    - ta0002:t1059
+
+alert:
+  severity: notice
+  threshold: 1
+  deduplication_window_minutes: 60
+  destinations:
+    - slack_my_team
+    - jira_main
+
+tables:
+  - zeek_dns
+
+modified: 2022/10/23
+tags:
+  - aws
+  - cloud
+  - monitoring
