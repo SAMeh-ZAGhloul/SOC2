@@ -251,31 +251,36 @@ A technical analysis shows that integrating Wazuh with OpenObserve is feasible t
 Below is a detailed architecture diagram showing how Wazuh integrates with OpenObserve:
 
 ```mermaid
-architecture-beta
-    group wazuh_cluster(server)[Wazuh Cluster]
-        service manager(server)[Wazuh Manager] in wazuh_cluster
-        service agent1(server)[Agent 1] in wazuh_cluster
-        service agent2(server)[Agent 2] in wazuh_cluster
-        service integrations(server)[Custom Integration] in wazuh_cluster
+flowchart LR
+    subgraph wc[Wazuh Cluster]
+        wm[Wazuh Manager]
+        wa1[Agent 1]
+        wa2[Agent 2]
+        wi[Custom Integration]
+        
+        wa1 --> wm
+        wa2 --> wm
+        wm --> wi
+    end
 
-    group o2_cluster(cloud)[OpenObserve Cluster]
-        service o2_api(server)[O2 API] in o2_cluster
-        service o2_ingester(server)[O2 Ingester] in o2_cluster
-        service o2_storage(database)[O2 Storage] in o2_cluster
-        service o2_ui(server)[O2 UI] in o2_cluster
+    subgraph oc[OpenObserve Cluster]
+        api[O2 API]
+        ing[O2 Ingester]
+        stor[O2 Storage]
+        ui[O2 UI]
+        
+        ing --> stor
+        api --> stor
+        ui --> api
+    end
 
-    group storage_layer(cloud)[Storage Layer]
-        service minio(disk)[MinIO/S3] in storage_layer
+    subgraph sl[Storage Layer]
+        min[MinIO/S3]
+    end
 
-    agent1:R --> L:manager
-    agent2:R --> L:manager
-    manager:R --> L:integrations
-    integrations:R --> L:o2_api
-    integrations:B --> T:minio
-    o2_ingester:B --> T:minio
-    o2_ingester:R --> L:o2_storage
-    o2_api:R --> L:o2_storage
-    o2_ui:B --> T:o2_api
+    wi --> api
+    wi --> min
+    ing --> min
 ```
 
 ### Architecture Components
