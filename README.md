@@ -248,7 +248,7 @@ A technical analysis shows that integrating Wazuh with OpenObserve is feasible t
 
 ### Architecture Diagram
 
-Below is a detailed architecture diagram showing how Wazuh integrates with OpenObserve:
+Below is a detailed architecture diagram showing how Wazuh integrates with OpenObserve
 
 ```mermaid
 flowchart LR
