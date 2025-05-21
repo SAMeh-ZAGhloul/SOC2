@@ -91,6 +91,79 @@ This repository contains three major open-source security and observability plat
 2. **OpenObserve**: ✅ Fully on-premises capable, with multiple storage and deployment options
 3. **Matano**: ⚠️ Limited on-premises capability, would require significant modifications
 
+## Integration Analysis: Matano Detection Capabilities in OpenObserve
+
+A detailed analysis shows that integrating Matano's Detection-as-Code capabilities into OpenObserve is technically feasible but would require significant development work.
+
+### Key Components for Integration
+
+1. **Pipeline Architecture**
+   - OpenObserve has a robust pipeline system supporting realtime/scheduled pipelines, stream processing, VRL scripting, and data transformation
+   - Multiple storage backend options (MySQL, PostgreSQL, SQLite)
+   - Existing pipeline execution framework with node/edge support
+
+2. **Required Matano Components**
+   - Python-based detection rules system
+   - Alert management and deduplication
+   - Remote caching for stateful detections
+   - Alert routing/destination handling
+
+### Integration Points
+
+1. **Pipeline Enhancement**
+   - Add Detection node type to OpenObserve's pipeline system
+   - Integrate Python runtime for detection execution
+   - Add detection configuration handling
+
+2. **Alert Management**
+   - Implement alert storage similar to Matano's design
+   - Add deduplication logic
+   - Support multiple alert destinations
+
+3. **Detection Engine**
+   - Add Python detection runtime
+   - Implement rule loading/validation
+   - Support remote caching for stateful detections
+
+### Technical Considerations
+
+1. **Performance**
+   - Python/Rust interop efficiency
+   - Caching optimization
+   - Alert storage performance
+
+2. **Reliability**
+   - Python execution error handling
+   - Timeout mechanisms
+   - Detection validation
+
+3. **Scalability**
+   - Parallel detection execution
+   - Efficient alert storage
+   - Alert query optimization
+
+4. **Security**
+   - Python sandbox environment
+   - Detection code validation
+   - Access control implementation
+
+### Recommended Implementation Phases
+
+1. **Phase 1: Basic Integration**
+   - Basic detection node implementation
+   - Simple Python rule execution
+   - Basic alert storage
+
+2. **Phase 2: Alert Management**
+   - Alert deduplication
+   - Threshold-based alerts
+   - Basic destinations (e.g., Slack)
+
+3. **Phase 3: Advanced Features**
+   - Stateful detections with caching
+   - Multiple alert destinations
+   - Advanced alert management
+
 ## Recommendations for On-Premises Deployment
 
 If looking for a fully on-premises solution:
