@@ -261,7 +261,7 @@ A technical analysis shows that integrating Wazuh with OpenObserve is feasible t
 3. **Pipeline Integration**
    - Use O2's pipeline system to process Wazuh alerts
    - Transform data using VRL in O2 pipelines
-   - Create custom alert handling nodes
+   - Create custom alert handling nodess
 
 ### Technical Components
 
